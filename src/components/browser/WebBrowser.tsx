@@ -32,6 +32,8 @@ const DEFAULT_SNIPPETS: Snippet[] = [
       onLoad: true,
       onUrlChange: false,
       urlPattern: "*",
+      background: false,
+      backgroundInterval: 1000,
     },
   },
   {
@@ -43,6 +45,8 @@ const DEFAULT_SNIPPETS: Snippet[] = [
       onLoad: false,
       onUrlChange: true,
       urlPattern: "*",
+      background: false,
+      backgroundInterval: 1000,
     },
   },
 ];
@@ -171,6 +175,7 @@ export const WebBrowser = () => {
         if (
           snippet.autoRun.enabled &&
           snippet.autoRun.onLoad &&
+          !snippet.autoRun.background &&
           matchUrlPattern(url, snippet.autoRun.urlPattern)
         ) {
           addLog("auto", `⚡ รันอัตโนมัติ: ${snippet.name} (โหลดหน้า)`);
@@ -187,6 +192,7 @@ export const WebBrowser = () => {
         if (
           snippet.autoRun.enabled &&
           snippet.autoRun.onUrlChange &&
+          !snippet.autoRun.background &&
           matchUrlPattern(url, snippet.autoRun.urlPattern)
         ) {
           addLog("auto", `⚡ รันอัตโนมัติ: ${snippet.name} (URL เปลี่ยน)`);
@@ -195,6 +201,34 @@ export const WebBrowser = () => {
       });
     }
     prevUrlRef.current = url;
+  }, [url, snippets, addLog, executeSnippetInternal]);
+
+  // Background script runner
+  useEffect(() => {
+    const intervals: NodeJS.Timeout[] = [];
+    
+    snippets.forEach((snippet) => {
+      if (
+        snippet.autoRun.enabled &&
+        snippet.autoRun.background &&
+        matchUrlPattern(url, snippet.autoRun.urlPattern)
+      ) {
+        // Log only once when starting
+        addLog("auto", `🔄 เริ่ม Background: ${snippet.name} (ทุก ${snippet.autoRun.backgroundInterval}ms)`);
+        
+        const intervalId = setInterval(() => {
+          if (matchUrlPattern(url, snippet.autoRun.urlPattern)) {
+            executeSnippetInternal(snippet.code, true);
+          }
+        }, snippet.autoRun.backgroundInterval);
+        
+        intervals.push(intervalId);
+      }
+    });
+
+    return () => {
+      intervals.forEach((id) => clearInterval(id));
+    };
   }, [url, snippets, addLog, executeSnippetInternal]);
 
   const handleNavigate = (newUrl: string) => {
