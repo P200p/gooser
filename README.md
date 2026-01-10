@@ -1,73 +1,53 @@
 # Welcome to your Lovable project
+# gooser – เบราว์เซอร์ที่ปรับแต่งได้พร้อมการฝังตัวอย่างข้อมูลผู้ใช้
 
-## Project info
+gooser เป็นแพลตฟอร์มเบราว์เซอร์แบบโอเพ่นซอร์สที่ช่วยให้ทุกคนปรับแต่งประสบการณ์การท่องเว็บของตนได้โดยการฝังโค้ด JavaScript ของตนเอง แม้ว่าคุณจะไม่ใช่นักพัฒนาซอฟต์แวร์ก็ตาม ด้วย UI ที่เรียบง่ายและใช้งานง่ายและแซนด์บ็อกซ์ที่แข็งแกร่ง Gooser ทำให้การเพิ่ม จัดการ และแชร์เครื่องมือที่กำหนดเองเป็นเรื่องง่ายและปลอดภัย
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## คุณสมบัติ
 
-## How can I edit this code?
+- 🚀 **ฝัง JavaScript Snippets**: เพิ่มเครื่องมือที่กำหนดเองหรือปรับแต่งให้กับเว็บไซต์ใดๆ ก็ได้ด้วยการคลิกเพียงไม่กี่ครั้ง
+- 🧩 **ไลบรารีและแกลเลอรีตัวอย่าง**: เรียกดู ติดตั้ง และแชร์ตัวอย่างจากชุมชน
+- 🔒 **แซนด์บ็อกซ์ที่ปลอดภัย**: ตัวอย่างข้อมูลทั้งหมดทำงานในสภาพแวดล้อมที่จำกัดเพื่อความปลอดภัยของคุณ
+- 🎨 **UI ที่เรียบง่าย ทันสมัย**: ออกแบบมาสำหรับทุกคน ไม่จำเป็นต้องเขียนโค้ด
+- 🌐 **การท่องเว็บที่มีประสิทธิภาพ**: ขับเคลื่อนโดย [Electron/Tauri/WebView2] ซึ่งรองรับมาตรฐานเว็บสมัยใหม่ทั้งหมด
+- 🔄 **ข้ามแพลตฟอร์ม**: Windows, macOS, Linux (วางแผนรองรับอุปกรณ์เคลื่อนที่)
+- 🛠️ **ขยายได้**: Plugin API สำหรับผู้ใช้และนักพัฒนาขั้นสูง
 
-There are several ways of editing your application.
+## เริ่มต้นใช้งาน
 
-**Use Lovable**
+### ข้อกำหนดเบื้องต้น
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- Node.js >= 18.x
+- npm >= 9.x
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Project info# gooser – Customizable Browser with User Snippet Embedding
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+gooser is an open-source browser platform that empowers everyone to customize their browsing experience by embedding their own JavaScript snippets—even if you’re not a developer. With a simple, intuitive UI and robust sandboxing, gooser makes it easy and safe to add, manage, and share custom tools.
 
-Follow these steps:
+## Features
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- 🚀 **Embed JavaScript Snippets**: Add custom tools or tweaks to any website with just a few clicks.
+- 🧩 **Snippet Library & Gallery**: Browse, install, and share snippets from the community.
+- 🔒 **Secure Sandboxing**: All snippets run in a restricted environment for your safety.
+- 🎨 **Simple, Modern UI**: Designed for everyone—no coding required.
+- 🌐 **Efficient Web Browsing**: Powered by [Electron/Tauri/WebView2], supporting all modern web standards.
+- 🔄 **Cross-Platform**: Windows, macOS, Linux (mobile support planned).
+- 🛠️ **Extensible**: Plugin API for advanced users and developers.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Getting Started
 
-# Step 3: Install the necessary dependencies.
+### Prerequisites
+
+- Node.js >= 18.x
+- npm >= 9.x
+
+### Installation
+
+```bash
+git clone https://github.com/P200p/gooser.git
+cd gooser
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
-```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
