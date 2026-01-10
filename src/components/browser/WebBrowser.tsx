@@ -311,9 +311,9 @@ export const WebBrowser = () => {
   };
 
   return (
-    <div className="flex h-screen bg-browser-chrome">
+    <div className="flex flex-col lg:flex-row h-screen bg-browser-chrome">
       {/* Main Browser Area */}
-      <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex flex-col flex-1 min-w-0 order-2 lg:order-1">
         {/* Title Bar */}
         <div className="flex items-center justify-center py-2 bg-browser-chrome border-b border-border/30">
           <div className="flex items-center gap-1.5 absolute left-4">
@@ -322,57 +322,64 @@ export const WebBrowser = () => {
             <div className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
           <span className="text-xs font-medium text-muted-foreground">
-            DevBrowser
+            เบราว์เซอร์นักพัฒนา
           </span>
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center gap-3 px-4 py-2.5 bg-browser-toolbar border-b border-border/50">
-          <BrowserControls
-            onBack={handleBack}
-            onForward={handleForward}
-            onRefresh={handleRefresh}
-            onHome={handleHome}
-            canGoBack={historyIndex > 0}
-            canGoForward={historyIndex < history.length - 1}
-          />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2.5 bg-browser-toolbar border-b border-border/50">
+          {/* Top row on mobile: Navigation controls */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <BrowserControls
+              onBack={handleBack}
+              onForward={handleForward}
+              onRefresh={handleRefresh}
+              onHome={handleHome}
+              canGoBack={historyIndex > 0}
+              canGoForward={historyIndex < history.length - 1}
+            />
 
-          <UrlBar url={url} onNavigate={handleNavigate} />
+            <UrlBar url={url} onNavigate={handleNavigate} />
+          </div>
 
-          {/* Snippet Buttons */}
-          <div className="flex items-center gap-2 pl-2 border-l border-border/50">
-            {snippets.map((snippet, index) => (
-              <SnippetButton
-                key={snippet.id}
-                id={snippet.id}
-                name={snippet.name}
-                code={snippet.code}
-                autoRun={snippet.autoRun}
-                onExecute={handleExecuteSnippet}
-                onUpdate={(name, code, autoRun) =>
-                  handleUpdateSnippet(snippet.id, name, code, autoRun)
-                }
-                accentColor={index === 0 ? "primary" : "accent"}
-              />
-            ))}
+          {/* Bottom row on mobile: Snippet controls */}
+          <div className="flex items-center gap-2 justify-between sm:justify-start sm:pl-2 sm:border-l border-border/50">
+            {/* Snippet Buttons - Hide on small screens, show only toggle */}
+            <div className="hidden md:flex items-center gap-2">
+              {snippets.map((snippet, index) => (
+                <SnippetButton
+                  key={snippet.id}
+                  id={snippet.id}
+                  name={snippet.name}
+                  code={snippet.code}
+                  autoRun={snippet.autoRun}
+                  onExecute={handleExecuteSnippet}
+                  onUpdate={(name, code, autoRun) =>
+                    handleUpdateSnippet(snippet.id, name, code, autoRun)
+                  }
+                  accentColor={index === 0 ? "primary" : "accent"}
+                />
+              ))}
+            </div>
             
-            {/* Snippet Panel Toggle */}
+            {/* Snippet Panel Toggle - Always visible */}
             <Button
               onClick={toggleSnippetPanel}
               variant={isSnippetPanelOpen ? "default" : "ghost"}
               size="sm"
-              className="flex items-center gap-2 ml-2 transition-all duration-200"
-              title={isSnippetPanelOpen ? "Close Snippet Panel" : "Open Snippet Panel"}
+              className="flex items-center gap-2 transition-all duration-200"
+              title={isSnippetPanelOpen ? "ปิดแผงสคริปต์" : "เปิดแผงสคริปต์"}
             >
               {isSnippetPanelOpen ? (
                 <>
                   <X className="w-4 h-4" />
-                  <span className="hidden sm:inline">Close</span>
+                  <span className="hidden sm:inline">ปิด</span>
                 </>
               ) : (
                 <>
                   <Code2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Snippets</span>
+                  <span className="sm:hidden">สคริปต์</span>
+                  <span className="hidden sm:inline">สคริปต์</span>
                 </>
               )}
             </Button>
@@ -382,23 +389,25 @@ export const WebBrowser = () => {
         {/* Browser Content */}
         <BrowserContent url={url} onLoad={handlePageLoad} />
 
-        {/* Console */}
-        <ConsoleOutput logs={consoleLogs} onClear={handleClearConsole} />
+        {/* Console - Collapsible on mobile */}
+        <div className="hidden sm:block">
+          <ConsoleOutput logs={consoleLogs} onClear={handleClearConsole} />
+        </div>
       </div>
 
-      {/* Snippet Panel - Collapsible Side Panel */}
+      {/* Snippet Panel - Full screen on mobile, side panel on desktop */}
       <div 
         className={`
-          transition-all duration-300 ease-in-out border-l border-border/50 bg-background
+          transition-all duration-300 ease-in-out bg-background order-1 lg:order-2
           ${isSnippetPanelOpen 
-            ? 'w-96 lg:w-[28rem] xl:w-[32rem]' 
-            : 'w-0'
+            ? 'fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto lg:w-96 xl:w-[28rem] 2xl:w-[32rem] lg:border-l border-border/50' 
+            : 'hidden lg:block lg:w-0'
           }
-          ${isSnippetPanelOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+          ${isSnippetPanelOpen ? 'opacity-100' : 'opacity-0 pointer-events-none lg:pointer-events-auto'}
           overflow-hidden flex-shrink-0
         `}
       >
-        <div className="w-96 lg:w-[28rem] xl:w-[32rem] h-full">
+        <div className="w-full h-full lg:w-96 xl:w-[28rem] 2xl:w-[32rem]">
           <SnippetPanel
             currentUrl={url}
             onExecute={handleSnippetPanelExecute}
@@ -407,6 +416,23 @@ export const WebBrowser = () => {
           />
         </div>
       </div>
+
+      {/* Mobile Console Toggle - Show only on mobile when snippet panel is closed */}
+      {!isSnippetPanelOpen && (
+        <div className="sm:hidden fixed bottom-4 right-4 z-40">
+          <Button
+            onClick={() => {
+              // Toggle mobile console - you can implement this state
+            }}
+            variant="secondary"
+            size="sm"
+            className="rounded-full shadow-lg"
+            title="แสดงคอนโซล"
+          >
+            📱
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

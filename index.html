@@ -1,30 +1,44 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="เบราเซอร์ที่คุณเป็นเจ้าของอย่างแท้จริง ส่วนหนึ่งของจักวาลGoonee&#39;Lovable Generated Project">
-    <meta name="author" content="Lovable" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- PWA และ Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="msapplication-navbutton-color" content="#0a0a0a" />
+    
+    <!-- Touch Icons -->
+    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    
+    <title>เบราว์เซอร์นักพัฒนา - DevBrowser</title>
+    <meta name="description" content="เบราว์เซอร์ที่ให้คุณรันสคริปต์ JavaScript บนเว็บไซต์ใดก็ได้ เหมือนกับ browser extension แต่ใช้งานง่ายกว่า">
+    <meta name="author" content="Goonee Universe" />
+    <meta name="keywords" content="browser, javascript, snippet, developer, เบราว์เซอร์, สคริปต์, นักพัฒนา" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    
-    
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:title" content="เบราว์เซอร์นักพัฒนา - DevBrowser" />
+    <meta property="og:description" content="เบราว์เซอร์ที่ให้คุณรันสคริปต์ JavaScript บนเว็บไซต์ใดก็ได้" />
     <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/ybUZM409KYSzvS7XdcBCWdA7bVy1/social-images/social-1768053480703-meta.png">
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:title" content="เบราว์เซอร์นักพัฒนา - DevBrowser" />
+    <meta name="twitter:description" content="เบราว์เซอร์ที่ให้คุณรันสคริปต์ JavaScript บนเว็บไซต์ใดก็ได้" />
     <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/ybUZM409KYSzvS7XdcBCWdA7bVy1/social-images/social-1768053480703-meta.png">
-    <meta property="og:title" content="Lovable App">
-  <meta name="twitter:title" content="Lovable App">
-  <meta property="og:description" content="เบราเซอร์ที่คุณเป็นเจ้าของอย่างแท้จริง ส่วนหนึ่งของจักวาลGoonee&#39;Lovable Generated Project">
-  <meta name="twitter:description" content="เบราเซอร์ที่คุณเป็นเจ้าของอย่างแท้จริง ส่วนหนึ่งของจักวาลGoonee&#39;Lovable Generated Project">
-</head>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  </head>
 
-  <body>
-    <div id="root"></div>
+  <body class="mobile-safe-area">
+    <div id="root" class="mobile-full-height"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -75,11 +75,11 @@ export const SnippetPanel: React.FC<SnippetPanelProps> = ({
         const content = e.target?.result as string;
         const importedSnippets = LocalStorageService.importSnippets(content);
         
-        toast.success(`Imported ${importedSnippets.length} snippet(s)`);
+        toast.success(`นำเข้า ${importedSnippets.length} สคริปต์แล้ว`);
         setRefreshKey(prev => prev + 1);
       } catch (error) {
         console.error('Import failed:', error);
-        toast.error('Failed to import snippets. Please check the file format.');
+        toast.error('นำเข้าสคริปต์ล้มเหลว กรุณาตรวจสอบรูปแบบไฟล์');
       }
     };
     reader.readAsText(file);
@@ -106,7 +106,7 @@ export const SnippetPanel: React.FC<SnippetPanelProps> = ({
 
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
-        <h1 className="text-xl font-semibold">Snippet Manager</h1>
+        <h1 className="text-lg sm:text-xl font-semibold">จัดการสคริปต์</h1>
         {onClose && (
           <Button
             onClick={onClose}
@@ -115,7 +115,7 @@ export const SnippetPanel: React.FC<SnippetPanelProps> = ({
             className="flex items-center gap-2"
           >
             <X className="w-4 h-4" />
-            Close
+            <span className="hidden sm:inline">ปิด</span>
           </Button>
         )}
       </div>
@@ -125,13 +125,15 @@ export const SnippetPanel: React.FC<SnippetPanelProps> = ({
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'list' | 'editor')}>
           <div className="px-4 pt-4">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="list" className="flex items-center gap-2">
+              <TabsTrigger value="list" className="flex items-center gap-2 text-sm">
                 <List className="w-4 h-4" />
-                Snippets
+                <span className="hidden sm:inline">สคริปต์</span>
+                <span className="sm:hidden">รายการ</span>
               </TabsTrigger>
-              <TabsTrigger value="editor" className="flex items-center gap-2">
+              <TabsTrigger value="editor" className="flex items-center gap-2 text-sm">
                 <FileText className="w-4 h-4" />
-                {editingSnippet ? 'Edit' : 'New'} Snippet
+                <span className="hidden sm:inline">{editingSnippet ? 'แก้ไข' : 'สร้างใหม่'}</span>
+                <span className="sm:hidden">{editingSnippet ? 'แก้ไข' : 'สร้าง'}</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -164,12 +166,12 @@ export const SnippetPanel: React.FC<SnippetPanelProps> = ({
 
       {/* Footer Info */}
       <div className="px-4 py-2 border-t bg-muted/30">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>
-            {currentUrl ? `Current: ${new URL(currentUrl).hostname}` : 'No active page'}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 text-xs text-muted-foreground">
+          <span className="truncate">
+            {currentUrl ? `หน้าปัจจุบัน: ${new URL(currentUrl).hostname}` : 'ไม่มีหน้าที่เปิดอยู่'}
           </span>
-          <span>
-            Snippets are stored locally in your browser
+          <span className="text-right">
+            สคริปต์จัดเก็บในเบราว์เซอร์
           </span>
         </div>
       </div>

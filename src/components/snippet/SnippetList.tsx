@@ -87,29 +87,29 @@ export const SnippetList: React.FC<SnippetListProps> = ({
     try {
       LocalStorageService.updateSnippet(updatedSnippet);
       loadSnippets();
-      toast.success(`Snippet ${updatedSnippet.enabled ? 'enabled' : 'disabled'}`);
+      toast.success(`สคริปต์ ${updatedSnippet.enabled ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}แล้ว`);
     } catch (error) {
       console.error('Failed to update snippet:', error);
-      toast.error('Failed to update snippet');
+      toast.error('อัปเดตสคริปต์ล้มเหลว');
     }
   }, [loadSnippets]);
 
   const handleDelete = useCallback((snippet: Snippet) => {
-    if (confirm(`Are you sure you want to delete "${snippet.name}"?`)) {
+    if (confirm(`คุณแน่ใจหรือไม่ที่จะลบ "${snippet.name}"?`)) {
       try {
         LocalStorageService.deleteSnippet(snippet.id);
         loadSnippets();
-        toast.success('Snippet deleted');
+        toast.success('ลบสคริปต์แล้ว');
       } catch (error) {
         console.error('Failed to delete snippet:', error);
-        toast.error('Failed to delete snippet');
+        toast.error('ลบสคริปต์ล้มเหลว');
       }
     }
   }, [loadSnippets]);
 
   const handleExecute = useCallback((snippet: Snippet) => {
     if (!snippet.enabled) {
-      toast.error('Snippet is disabled');
+      toast.error('สคริปต์ถูกปิดใช้งาน');
       return;
     }
     onExecute?.(snippet.code, snippet.id);
@@ -127,10 +127,10 @@ export const SnippetList: React.FC<SnippetListProps> = ({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      toast.success('All snippets exported');
+      toast.success('ส่งออกสคริปต์ทั้งหมดแล้ว');
     } catch (error) {
       console.error('Failed to export snippets:', error);
-      toast.error('Failed to export snippets');
+      toast.error('ส่งออกสคริปต์ล้มเหลว');
     }
   }, []);
 
@@ -144,45 +144,46 @@ export const SnippetList: React.FC<SnippetListProps> = ({
   };
 
   const getSnippetStatus = (snippet: Snippet) => {
-    if (!snippet.enabled) return { text: 'Disabled', variant: 'secondary' as const };
+    if (!snippet.enabled) return { text: 'ปิดใช้งาน', variant: 'secondary' as const };
     if (currentUrl && matchUrlPattern(currentUrl, snippet.urlPattern)) {
-      return { text: 'Active', variant: 'default' as const };
+      return { text: 'ใช้งานได้', variant: 'default' as const };
     }
-    return { text: 'Ready', variant: 'outline' as const };
+    return { text: 'พร้อม', variant: 'outline' as const };
   };
 
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Snippets ({filteredSnippets.length})</h2>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">สคริปต์ ({filteredSnippets.length})</h2>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Button
             onClick={onImport}
             variant="outline"
             size="sm"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 flex-1 sm:flex-none"
           >
             <Upload className="w-4 h-4" />
-            Import
+            <span className="hidden sm:inline">นำเข้า</span>
           </Button>
           <Button
             onClick={handleExportAll}
             variant="outline"
             size="sm"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 flex-1 sm:flex-none"
             disabled={snippets.length === 0}
           >
             <Download className="w-4 h-4" />
-            Export All
+            <span className="hidden sm:inline">ส่งออก</span>
           </Button>
           <Button
             onClick={onNew}
             size="sm"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 flex-1 sm:flex-none"
           >
             <Plus className="w-4 h-4" />
-            New Snippet
+            <span className="sm:hidden">สร้าง</span>
+            <span className="hidden sm:inline">สร้างใหม่</span>
           </Button>
         </div>
       </div>
@@ -192,14 +193,14 @@ export const SnippetList: React.FC<SnippetListProps> = ({
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search snippets..."
+            placeholder="ค้นหาสคริปต์..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
           />
         </div>
 
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 text-sm">
           <div className="flex items-center space-x-2">
             <Switch
               id="show-matching"
@@ -207,9 +208,9 @@ export const SnippetList: React.FC<SnippetListProps> = ({
               onCheckedChange={setShowOnlyMatching}
               disabled={!currentUrl}
             />
-            <label htmlFor="show-matching" className="flex items-center gap-1">
+            <label htmlFor="show-matching" className="flex items-center gap-1 cursor-pointer">
               <Globe className="w-4 h-4" />
-              Show matching URL only
+              แสดงเฉพาะ URL ที่ตรงกัน
             </label>
           </div>
           <div className="flex items-center space-x-2">
@@ -218,9 +219,9 @@ export const SnippetList: React.FC<SnippetListProps> = ({
               checked={showOnlyEnabled}
               onCheckedChange={setShowOnlyEnabled}
             />
-            <label htmlFor="show-enabled" className="flex items-center gap-1">
+            <label htmlFor="show-enabled" className="flex items-center gap-1 cursor-pointer">
               <Filter className="w-4 h-4" />
-              Show enabled only
+              แสดงเฉพาะที่เปิดใช้งาน
             </label>
           </div>
         </div>
@@ -235,21 +236,21 @@ export const SnippetList: React.FC<SnippetListProps> = ({
                 {snippets.length === 0 ? (
                   <>
                     <Plus className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>No snippets yet</p>
-                    <p className="text-sm">Create your first snippet to get started</p>
+                    <p>ยังไม่มีสคริปต์</p>
+                    <p className="text-sm">สร้างสคริปต์แรกของคุณเพื่อเริ่มต้น</p>
                   </>
                 ) : (
                   <>
                     <Search className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>No snippets match your filters</p>
-                    <p className="text-sm">Try adjusting your search or filters</p>
+                    <p>ไม่มีสคริปต์ที่ตรงกับการกรอง</p>
+                    <p className="text-sm">ลองปรับการค้นหาหรือตัวกรอง</p>
                   </>
                 )}
               </div>
               {snippets.length === 0 && (
                 <Button onClick={onNew} className="flex items-center gap-2">
                   <Plus className="w-4 h-4" />
-                  Create First Snippet
+                  สร้างสคริปต์แรก
                 </Button>
               )}
             </CardContent>
@@ -292,7 +293,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
                     {/* Code Preview */}
                     <div className="bg-muted/50 rounded p-2 text-xs font-mono overflow-hidden">
                       <div className="line-clamp-2">
-                        {snippet.code.split('\n').slice(0, 2).join('\n') || '// Empty snippet'}
+                        {snippet.code.split('\n').slice(0, 2).join('\n') || '// สคริปต์ว่าง'}
                       </div>
                     </div>
 
@@ -307,7 +308,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
                           disabled={!snippet.enabled}
                         >
                           <Play className="w-3 h-3" />
-                          Run
+                          <span className="hidden sm:inline">รัน</span>
                         </Button>
                         <Button
                           onClick={() => onEdit?.(snippet)}
@@ -316,7 +317,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
                           className="flex items-center gap-1"
                         >
                           <Edit className="w-3 h-3" />
-                          Edit
+                          <span className="hidden sm:inline">แก้ไข</span>
                         </Button>
                       </div>
                       <Button
@@ -324,6 +325,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
                         size="sm"
                         variant="ghost"
                         className="flex items-center gap-1 text-destructive hover:text-destructive"
+                        title="ลบสคริปต์"
                       >
                         <Trash2 className="w-3 h-3" />
                       </Button>
