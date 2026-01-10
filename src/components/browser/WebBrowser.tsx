@@ -4,6 +4,9 @@ import { UrlBar } from "./UrlBar";
 import { SnippetButton, AutoRunSettings } from "./SnippetButton";
 import { BrowserContent } from "./BrowserContent";
 import { ConsoleOutput } from "./ConsoleOutput";
+import { SnippetPanel } from "@/components/snippet/SnippetPanel";
+import { Button } from "@/components/ui/button";
+import { Code2, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface Snippet {
@@ -100,6 +103,7 @@ export const WebBrowser = () => {
   const [consoleLogs, setConsoleLogs] = useState<ConsoleLog[]>([]);
   const [logIdCounter, setLogIdCounter] = useState(0);
   const [pageLoaded, setPageLoaded] = useState(false);
+  const [isSnippetPanelOpen, setIsSnippetPanelOpen] = useState(false);
   const prevUrlRef = useRef<string>("about:blank");
   const initialLoadDoneRef = useRef(false);
 
@@ -298,57 +302,111 @@ export const WebBrowser = () => {
     setConsoleLogs([]);
   };
 
+  const toggleSnippetPanel = () => {
+    setIsSnippetPanelOpen(!isSnippetPanelOpen);
+  };
+
+  const handleSnippetPanelExecute = (code: string, snippetId?: string) => {
+    executeSnippetInternal(code, false);
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-browser-chrome">
-      {/* Title Bar */}
-      <div className="flex items-center justify-center py-2 bg-browser-chrome border-b border-border/30">
-        <div className="flex items-center gap-1.5 absolute left-4">
-          <div className="w-3 h-3 rounded-full bg-destructive/80" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-          <div className="w-3 h-3 rounded-full bg-green-500/80" />
+    <div className="flex h-screen bg-browser-chrome">
+      {/* Main Browser Area */}
+      <div className="flex flex-col flex-1 min-w-0">
+        {/* Title Bar */}
+        <div className="flex items-center justify-center py-2 bg-browser-chrome border-b border-border/30">
+          <div className="flex items-center gap-1.5 absolute left-4">
+            <div className="w-3 h-3 rounded-full bg-destructive/80" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+            <div className="w-3 h-3 rounded-full bg-green-500/80" />
+          </div>
+          <span className="text-xs font-medium text-muted-foreground">
+            DevBrowser
+          </span>
         </div>
-        <span className="text-xs font-medium text-muted-foreground">
-          DevBrowser
-        </span>
+
+        {/* Toolbar */}
+        <div className="flex items-center gap-3 px-4 py-2.5 bg-browser-toolbar border-b border-border/50">
+          <BrowserControls
+            onBack={handleBack}
+            onForward={handleForward}
+            onRefresh={handleRefresh}
+            onHome={handleHome}
+            canGoBack={historyIndex > 0}
+            canGoForward={historyIndex < history.length - 1}
+          />
+
+          <UrlBar url={url} onNavigate={handleNavigate} />
+
+          {/* Snippet Buttons */}
+          <div className="flex items-center gap-2 pl-2 border-l border-border/50">
+            {snippets.map((snippet, index) => (
+              <SnippetButton
+                key={snippet.id}
+                id={snippet.id}
+                name={snippet.name}
+                code={snippet.code}
+                autoRun={snippet.autoRun}
+                onExecute={handleExecuteSnippet}
+                onUpdate={(name, code, autoRun) =>
+                  handleUpdateSnippet(snippet.id, name, code, autoRun)
+                }
+                accentColor={index === 0 ? "primary" : "accent"}
+              />
+            ))}
+            
+            {/* Snippet Panel Toggle */}
+            <Button
+              onClick={toggleSnippetPanel}
+              variant={isSnippetPanelOpen ? "default" : "ghost"}
+              size="sm"
+              className="flex items-center gap-2 ml-2 transition-all duration-200"
+              title={isSnippetPanelOpen ? "Close Snippet Panel" : "Open Snippet Panel"}
+            >
+              {isSnippetPanelOpen ? (
+                <>
+                  <X className="w-4 h-4" />
+                  <span className="hidden sm:inline">Close</span>
+                </>
+              ) : (
+                <>
+                  <Code2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Snippets</span>
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Browser Content */}
+        <BrowserContent url={url} onLoad={handlePageLoad} />
+
+        {/* Console */}
+        <ConsoleOutput logs={consoleLogs} onClear={handleClearConsole} />
       </div>
 
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 px-4 py-2.5 bg-browser-toolbar border-b border-border/50">
-        <BrowserControls
-          onBack={handleBack}
-          onForward={handleForward}
-          onRefresh={handleRefresh}
-          onHome={handleHome}
-          canGoBack={historyIndex > 0}
-          canGoForward={historyIndex < history.length - 1}
-        />
-
-        <UrlBar url={url} onNavigate={handleNavigate} />
-
-        {/* Snippet Buttons */}
-        <div className="flex items-center gap-2 pl-2 border-l border-border/50">
-          {snippets.map((snippet, index) => (
-            <SnippetButton
-              key={snippet.id}
-              id={snippet.id}
-              name={snippet.name}
-              code={snippet.code}
-              autoRun={snippet.autoRun}
-              onExecute={handleExecuteSnippet}
-              onUpdate={(name, code, autoRun) =>
-                handleUpdateSnippet(snippet.id, name, code, autoRun)
-              }
-              accentColor={index === 0 ? "primary" : "accent"}
-            />
-          ))}
+      {/* Snippet Panel - Collapsible Side Panel */}
+      <div 
+        className={`
+          transition-all duration-300 ease-in-out border-l border-border/50 bg-background
+          ${isSnippetPanelOpen 
+            ? 'w-96 lg:w-[28rem] xl:w-[32rem]' 
+            : 'w-0'
+          }
+          ${isSnippetPanelOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+          overflow-hidden flex-shrink-0
+        `}
+      >
+        <div className="w-96 lg:w-[28rem] xl:w-[32rem] h-full">
+          <SnippetPanel
+            currentUrl={url}
+            onExecute={handleSnippetPanelExecute}
+            onClose={toggleSnippetPanel}
+            isVisible={isSnippetPanelOpen}
+          />
         </div>
       </div>
-
-      {/* Browser Content */}
-      <BrowserContent url={url} onLoad={handlePageLoad} />
-
-      {/* Console */}
-      <ConsoleOutput logs={consoleLogs} onClear={handleClearConsole} />
     </div>
   );
 };
