@@ -18,10 +18,15 @@ vi.mock('./ConsoleManager', () => ({
   }
 }));
 
+// Mock window type with eval
+interface MockWindow extends Omit<Window, 'eval'> {
+  eval: (code: string) => any;
+}
+
 describe('ScriptInjector Timeout Handling', () => {
   let scriptInjector: ScriptInjector;
   let mockIframe: HTMLIFrameElement;
-  let mockWindow: Window;
+  let mockWindow: MockWindow;
   let mockDocument: Document;
 
   beforeEach(() => {

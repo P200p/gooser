@@ -15,7 +15,7 @@ export interface Snippet {
 }
 
 export interface ConsoleMessage {
-  type: 'log' | 'error' | 'warn' | 'info';
+  type: 'log' | 'error' | 'warn' | 'info' | 'auto';
   message: string;
   timestamp: Date;
   source: 'snippet' | 'page';

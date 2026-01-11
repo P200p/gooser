@@ -27,9 +27,9 @@ export const ConsoleOutput = ({ logs, onClear }: ConsoleOutputProps) => {
   const getSourceIcon = (source: ConsoleMessage["source"]) => {
     switch (source) {
       case "snippet":
-        return <Code className="h-3 w-3 text-primary" title="From snippet" />;
+        return <Code className="h-3 w-3 text-primary" aria-label="From snippet" />;
       case "page":
-        return <Globe className="h-3 w-3 text-muted-foreground" title="From page" />;
+        return <Globe className="h-3 w-3 text-muted-foreground" aria-label="From page" />;
       default:
         return null;
     }

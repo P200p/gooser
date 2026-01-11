@@ -18,10 +18,15 @@ vi.mock('./ConsoleManager', () => ({
   }
 }));
 
+// Mock window type with eval
+interface MockWindow extends Omit<Window, 'eval'> {
+  eval: (code: string) => any;
+}
+
 describe('ScriptInjector Property Tests', () => {
   let scriptInjector: ScriptInjector;
   let mockIframe: HTMLIFrameElement;
-  let mockWindow: Window;
+  let mockWindow: MockWindow;
   let mockDocument: Document;
 
   beforeEach(() => {
@@ -113,9 +118,9 @@ describe('ScriptInjector Property Tests', () => {
     );
 
     fc.assert(
-      fc.property(
+      fc.asyncProperty(
         fc.array(domOperationArbitrary, { minLength: 1, maxLength: 3 }),
-        (operations) => {
+        async (operations) => {
           // Generate JavaScript code for the operations
           const codeLines = operations.map(op => {
             switch (op.type) {
@@ -236,9 +241,9 @@ describe('ScriptInjector Property Tests', () => {
     );
 
     fc.assert(
-      fc.property(
+      fc.asyncProperty(
         invalidCodeArbitrary,
-        (invalidCode) => {
+        async (invalidCode) => {
           // Mock eval to throw an error
           mockWindow.eval = vi.fn().mockImplementation(() => {
             throw new Error('Script execution error');
@@ -282,9 +287,9 @@ describe('ScriptInjector Property Tests', () => {
     });
 
     fc.assert(
-      fc.property(
+      fc.asyncProperty(
         domAccessArbitrary,
-        (domAccess) => {
+        async (domAccess) => {
           const code = domAccess.assignment 
             ? `var result = ${domAccess.operation}; result = "${domAccess.value.replace(/"/g, '\\"')}";`
             : `var result = ${domAccess.operation};`;

@@ -417,11 +417,12 @@ export class ConsoleManager {
    * Get message count by type
    */
   getMessageCounts(): Record<ConsoleMessage['type'], number> {
-    const counts = {
+    const counts: Record<ConsoleMessage['type'], number> = {
       log: 0,
       error: 0,
       warn: 0,
-      info: 0
+      info: 0,
+      auto: 0
     };
 
     this.messageHistory.forEach(msg => {

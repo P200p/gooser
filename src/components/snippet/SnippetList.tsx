@@ -282,7 +282,6 @@ export const SnippetList: React.FC<SnippetListProps> = ({
                       <Switch
                         checked={snippet.enabled}
                         onCheckedChange={() => handleToggleEnabled(snippet)}
-                        size="sm"
                       />
                     </div>
                   </div>

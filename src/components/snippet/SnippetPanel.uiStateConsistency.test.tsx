@@ -119,7 +119,7 @@ describe('SnippetPanel UI State Consistency Property Tests', () => {
     );
 
     fc.assert(
-      fc.property(
+      fc.asyncProperty(
         tabSequenceArbitrary,
         async (tabSequence) => {
           // Setup clean test environment
