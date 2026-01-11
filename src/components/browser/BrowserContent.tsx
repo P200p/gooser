@@ -79,7 +79,7 @@ export const BrowserContent = ({ url, onLoad }: BrowserContentProps) => {
           className="w-full h-full border-0"
           onLoad={handleLoad}
           onError={handleError}
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          sandbox="allow-scripts allow-forms allow-popups"
           title="Browser Content"
         />
       )}

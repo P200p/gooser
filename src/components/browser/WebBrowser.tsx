@@ -21,6 +21,8 @@ interface ConsoleLog {
   type: "log" | "error" | "warn" | "info" | "auto";
   message: string;
   timestamp: Date;
+  source: "snippet" | "page";
+  snippetId?: string;
 }
 
 const STORAGE_KEY = "devbrowser-snippets";
@@ -113,7 +115,7 @@ export const WebBrowser = () => {
   }, [snippets]);
 
   const addLog = useCallback(
-    (type: ConsoleLog["type"], message: string) => {
+    (type: ConsoleLog["type"], message: string, source: ConsoleLog["source"] = "snippet", snippetId?: string) => {
       setConsoleLogs((prev) => [
         ...prev,
         {
@@ -121,6 +123,8 @@ export const WebBrowser = () => {
           type,
           message,
           timestamp: new Date(),
+          source,
+          snippetId,
         },
       ]);
     },

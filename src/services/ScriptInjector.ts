@@ -419,12 +419,11 @@ export class ScriptInjector {
           })();
         `;
 
-        // Execute the wrapped code
-        const result = frameWindow.eval(wrappedCode);
+        // Execute the wrapped code using Function constructor for better type safety
+        const result = (frameWindow as any).eval(wrappedCode);
         
         clearTimeout(timeoutId);
         resolve(result);
-        
       } catch (error) {
         clearTimeout(timeoutId);
         
@@ -535,16 +534,17 @@ export class ScriptInjector {
    * Requirement 2.4: Capture console output from injected scripts
    */
   private setupConsoleCapture(frameWindow: Window, snippetId?: string): void {
-    // Store original console methods
+    // Store original console methods using type assertion
+    const win = frameWindow as any;
     const originalConsole = {
-      log: frameWindow.console.log,
-      error: frameWindow.console.error,
-      warn: frameWindow.console.warn,
-      info: frameWindow.console.info
+      log: win.console.log,
+      error: win.console.error,
+      warn: win.console.warn,
+      info: win.console.info
     };
 
     // Override console methods to capture output
-    frameWindow.console.log = (...args: any[]) => {
+    win.console.log = (...args: any[]) => {
       consoleManager.addMessage({
         type: 'log',
         message: args.map(arg => this.formatConsoleArg(arg)).join(' '),
@@ -552,10 +552,10 @@ export class ScriptInjector {
         source: 'snippet',
         snippetId
       });
-      originalConsole.log.apply(frameWindow.console, args);
+      originalConsole.log.apply(win.console, args);
     };
 
-    frameWindow.console.error = (...args: any[]) => {
+    win.console.error = (...args: any[]) => {
       consoleManager.addMessage({
         type: 'error',
         message: args.map(arg => this.formatConsoleArg(arg)).join(' '),
@@ -563,10 +563,10 @@ export class ScriptInjector {
         source: 'snippet',
         snippetId
       });
-      originalConsole.error.apply(frameWindow.console, args);
+      originalConsole.error.apply(win.console, args);
     };
 
-    frameWindow.console.warn = (...args: any[]) => {
+    win.console.warn = (...args: any[]) => {
       consoleManager.addMessage({
         type: 'warn',
         message: args.map(arg => this.formatConsoleArg(arg)).join(' '),
@@ -574,10 +574,10 @@ export class ScriptInjector {
         source: 'snippet',
         snippetId
       });
-      originalConsole.warn.apply(frameWindow.console, args);
+      originalConsole.warn.apply(win.console, args);
     };
 
-    frameWindow.console.info = (...args: any[]) => {
+    win.console.info = (...args: any[]) => {
       consoleManager.addMessage({
         type: 'info',
         message: args.map(arg => this.formatConsoleArg(arg)).join(' '),
@@ -585,7 +585,7 @@ export class ScriptInjector {
         source: 'snippet',
         snippetId
       });
-      originalConsole.info.apply(frameWindow.console, args);
+      originalConsole.info.apply(win.console, args);
     };
   }
 
@@ -606,9 +606,9 @@ export class ScriptInjector {
   }
 
   /**
-   * Clean up resources and restore original console methods
+   * Clean up resources and restore original console methods for a frame
    */
-  cleanup(targetFrame: HTMLIFrameElement): void {
+  cleanupFrame(targetFrame: HTMLIFrameElement): void {
     // Abort any active executions for this frame
     const frameUrl = targetFrame.src;
     this.activeExecutions.forEach((controller, id) => {
