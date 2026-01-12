@@ -112,7 +112,9 @@ export function WebViewContainer({ url, isActive = true, className = "", layers 
         }
 
         // If not same-origin, try postMessage to the page (assuming it listens)
-        iframeRef.current.contentWindow?.postMessage({ type: 'injectLayers', layers }, '*');
+        if (iframeRef.current) {
+          iframeRef.current.contentWindow?.postMessage({ type: 'injectLayers', layers }, '*');
+        }
       } catch (e) {
         // Cross-origin — force fallback to goonee helper page which will accept postMessage or URL param
         console.warn('Cross-origin injection blocked, switching to fallback helper page', e);
